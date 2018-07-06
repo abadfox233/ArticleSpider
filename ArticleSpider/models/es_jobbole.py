@@ -1,7 +1,3 @@
-# _*_ coding: utf-8 _*_
-__author__ = 'mtianyan'
-__date__ = '2017/6/24 22:57'
-
 from datetime import datetime
 from elasticsearch_dsl import DocType, Date, Nested, Boolean, \
     analyzer, InnerObjectWrapper, Completion, Keyword, Text, Integer
@@ -13,14 +9,18 @@ from elasticsearch_dsl.connections import connections
 # 与服务器进行连接，允许多个
 connections.create_connection(hosts=["localhost"])
 
-# class CustomAnalyzer(_CustomAnalyzer):
-#     def get_analysis_definition(self):
-#         return {}
-# ik_analyzer = CustomAnalyzer("ik_max_word", filter=["lowercase"])
+
+class CustomAnalyzer(_CustomAnalyzer):
+    def get_analysis_definition(self):
+        return {}
+
+
+ik_analyzer = CustomAnalyzer("ik_max_word", filter=["lowercase"])
+
 
 class ArticleType(DocType):
     # 伯乐在线文章类型
-    # suggest = Completion(analyzer=ik_analyzer)
+    suggest = Completion(analyzer=ik_analyzer)
     title = Text(analyzer="ik_max_word")
     create_date = Date()
     url = Keyword()

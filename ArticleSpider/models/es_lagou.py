@@ -1,6 +1,5 @@
 # _*_ coding: utf-8 _*_
-__author__ = 'mtianyan'
-__date__ = '2017/6/25 10:18'
+
 
 
 from datetime import datetime
@@ -26,11 +25,13 @@ class LagouType(DocType):
     title = Text(analyzer="ik_max_word")
     url = Keyword()
     url_object_id = Keyword()
-    salary_min = Text(analyzer="ik_max_word")
-    salary_max = Text(analyzer="ik_max_word")
+    # salary_min = Text(analyzer="ik_max_word")
+    # salary_max = Text(analyzer="ik_max_word")
+    salary = Text(analyzer="ik_max_word")
     job_city = Keyword()
-    work_years_min = Text(analyzer="ik_max_word")
-    work_years_max = Text(analyzer="ik_max_word")
+    # work_years_min = Text(analyzer="ik_max_word")
+    # work_years_max = Text(analyzer="ik_max_word")
+    work_years = Text(analyzer="ik_max_word")
     degree_need = Text(analyzer="ik_max_word")
     job_type = Keyword()
     publish_time = Text(analyzer="ik_max_word")

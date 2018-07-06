@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import os
 # Scrapy settings for ArticleSpider project
 #
 # For simplicity, this file contains only settings considered important or
@@ -8,7 +8,6 @@
 #     https://doc.scrapy.org/en/latest/topics/settings.html
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-import os
 
 BOT_NAME = 'ArticleSpider'
 
@@ -34,7 +33,8 @@ ROBOTSTXT_OBEY = False
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
+
+COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
@@ -53,19 +53,13 @@ ROBOTSTXT_OBEY = False
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
-   # 'ArticleSpider.middlewares.ArticlespiderDownloaderMiddleware': 543,
 
-    # 默认自带用户代理中间件需要none不使用
-    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
-    # 自定义的使用随机用户代理的中间件
-    'ArticleSpider.middlewares.RandomUserAgentMiddlware': 400,
-    # 为伯乐在线测试的Chrome集成。
-    # 'ArticleSpider.middlewares.JSPageMiddleware': 1,
-
-    # 随机更换西刺ip代理池中ip的中间件
-    # 'ArticleSpider.middlewares.RandomProxyMiddleware': 2,
-}
+# 下载中间件
+# DOWNLOADER_MIDDLEWARES = {
+# #     # 'ArticleSpider.middlewares.JSPageMiddleware': 1,
+#       'ArticleSpider.middlewares.RandomUserAgentMiddlware': 543,
+#     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+# }
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
@@ -75,40 +69,32 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
+
 ITEM_PIPELINES = {
-   'ArticleSpider.pipelines.ArticlespiderPipeline': 300,
 
-    # scrapy自带的三大法宝之一图片下载
-    # 'scrapy.pipelines.images.ImagesPipeline': 1,
+    # jobbloe
 
-    # 我们自定义的图片下载pipeline:下载图片同时,保存路径
-    'ArticleSpider.pipelines.ArticleImagePipeline': 2,
+   # 'ArticleSpider.pipelines.JsonExporterPipeline': 2,
+   #  'scrapy.pipelines.images.ImagesPipeline' : 1,
+   #  'ArticleSpider.pipelines.ArticleImagePipeline': 1,
+   #  'ArticleSpider.pipelines.MysqlTwistedPipeline': 1,
+    # 'ArticleSpider.pipelines.MysqlPipeline': 2,
+    'ArticleSpider.pipelines.ElasticsearchPipeline': 3,
 
-    # 自定义的保存数据到json文件中的pipeline。
-    # 'ArticleSpider.pipelines.JsonWithEncodingPipeline': 3,
-
-    # 调用scrapy提供的json export导出json文件
-    # 'ArticleSpider.pipelines.JsonExporterPipeline': 4,
-
-    # 使用同步方式写入数据库
-    #  'ArticleSpider.pipelines.MysqlPipeline': 5,
-
-    # 使用异步通用方式写入数据库
-    'ArticleSpider.pipelines.MysqlTwistedPipeline': 6,
-
-    # 将伯乐在线数据存入es中
-    # 'ArticleSpider.pipelines.ElasticSearchPipeline': 7,
+    # zhihu
 }
 
-# 设置哪个字段是图片
-IMAGES_URLS_FIELD = "front_image_url"
-project_dir = os.path.abspath(os.path.dirname(__file__))
-IMAGES_STORE = os.path.join(project_dir, 'images')
-
+# 图片下载地址
+IMAGES_URLS_FIELD = 'front_image_url'
+project_dir = os.path.dirname(os.path.abspath(__file__))
+IMAGES_STORE = os.path.join(project_dir, "images")
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
+
+# 下载自动配速
 AUTOTHROTTLE_ENABLED = True
+
 # The initial download delay
 #AUTOTHROTTLE_START_DELAY = 5
 # The maximum download delay to be set in case of high latencies
@@ -127,15 +113,25 @@ AUTOTHROTTLE_ENABLED = True
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-# mysql基本信息
-MYSQL_HOST = "127.0.0.1"
-MYSQL_DBNAME = "articlespider"
-MYSQL_USER = "root"
-MYSQL_PASSWORD = "tp158917"
-
-# LOG_ENABLED = True
-SQL_DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
-SQL_DATE_FORMAT = "%Y-%m-%d"
-
+# user-agent 模式
 RANDOM_UA_TYPE = "random"
 
+# 下载延时防止被反爬
+DOWNLOAD_DELAY = 0.25
+
+# REDIRECT_ENABLED = False # 禁止重定向
+
+# 拉勾网 专用 header
+
+
+# MYSQL 数据库配置
+MYSQL_HOST = 'localhost'
+MYSQL_DBNAME = 'article_spider'
+MYSQL_USER = 'root'
+MYSQL_PASSWORD = '7411'
+
+USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0"
+
+
+SQL_DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+SQL_DATE_FORMAT = "%Y-%m-%d"
